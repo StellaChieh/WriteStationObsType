@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<Configuration status="info" name="config">
+	<Properties>
+    	<Property name="logFolder" value="log"/>
+    	<Property name="programLogFile" value="all"/>
+        <Property name="programLogTriggerSize">5 MB</Property>
+        <Property name="programLogRolloverMax">5</Property>
+    	<Property name="resultLogFile" value="result"/>
+	</Properties>
+    
+	<Appenders>  
+		<Console name="console" >  
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %c [%-5level] %C{1} - %msg%n"/>  
+		</Console>
+		
+		<RollingRandomAccessFile name="programLog_appender"
+			fileName="${logFolder}/${programLogFile}.log"
+			filePattern="${logFolder}/${programLogFile}-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %c [%-5level] %C{1} - %msg%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="${programLogTriggerSize}"/>
+            </Policies>
+            <DefaultRolloverStrategy max="${programLogRolloverMax}"/>
+        </RollingRandomAccessFile>
+		
+		<File name="resultLog_appender"
+			fileName="${logFolder}/${resultLogFile}.log"
+			append="false" >
+			<PatternLayout pattern= "%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %C{1} - %msg%n"/>
+		</File>	
+	</Appenders>  
+    
+	<Loggers>  
+		<Root level="info">  
+			<AppenderRef ref="console"/>  
+		</Root>  
+		
+		<Logger name="jdbcTemplate" level="info" additivity="false">   
+			<AppenderRef ref="programLog_appender"/>
+		</Logger>
+    
+		<Logger name="program" level="trace" additivity="false">   
+			<AppenderRef ref="programLog_appender"/>
+		</Logger>
+		
+		<Logger name="result" level="info" additivity="false">   
+			<AppenderRef ref="resultLog_appender"/> 
+			<AppenderRef ref="programLog_appender"/> 
+		</Logger>	
+	</Loggers>  
+	
+</Configuration>  

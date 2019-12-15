@@ -1,0 +1,63 @@
+plugins {
+	id 'java'
+	id 'eclipse'
+	id 'com.github.johnrengelman.shadow' version '2.0.2'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.iisi.cmt.stationObsType.app.App'
+    }
+}
+
+shadowJar {
+	baseName = 'WriteStationObsType'
+	version =  '1.0'
+	appendix = null
+}
+
+task buildUberTar(type: Tar, dependsOn: shadowJar){
+	from('config/application.properties'){
+		into 'config'
+	}
+	from('config/log4j2.xml'){
+		into 'config'
+	}
+	from(shadowJar){
+		
+	}
+}
+
+task buildUberZip(type: Zip, dependsOn: shadowJar){
+	from('config/application.properties'){
+		into 'config'
+	}
+	from('config/log4j2.xml'){
+		into 'config'
+	}
+	from(shadowJar){
+		
+	}
+}
+
+repositories {
+    jcenter()
+}
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+compileJava.options.encoding = 'UTF-8'
+
+dependencies {
+	compile group: 'org.springframework', name: 'spring-core', version: '4.3.11.RELEASE'
+	compile group: 'org.springframework', name: 'spring-context', version: '4.3.11.RELEASE'
+	compile group: 'org.springframework', name: 'spring-jdbc', version: '4.3.11.RELEASE'
+	compile group: 'org.springframework', name: 'spring-beans', version: '4.3.11.RELEASE'
+	
+	compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.47'
+	
+	compile group: 'net.sf.supercsv', name: 'super-csv', version: '2.4.0'
+	
+	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.10.0'
+  	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.10.0'
+}
